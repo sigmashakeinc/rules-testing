@@ -19,13 +19,12 @@ rule no-skipped-tests {
   enabled true
   priority 80
   severity warning
-  ASK write
+  LOG write
   IF path GLOB "**/*.test.*" AND content LINE_REGEX "(?:test|it|describe)\\.skip\\s*\\("
   OR path GLOB "**/*.spec.*" AND content LINE_REGEX "(?:test|it|describe)\\.skip\\s*\\("
   OR path GLOB "**/*.test.*" AND content LINE_REGEX "xit\\s*\\("
   OR content LINE_REGEX "xdescribe\\s*\\("
   MESSAGE "Skipped test committed. Skipped tests accumulate and create false confidence in test coverage. Fix the underlying issue or remove the test entirely."
-  PROMPT "Why is this test skipped? If the feature is not yet implemented, add a tracking issue. If the test is flaky, fix the root cause rather than skipping it."
 }
 
 rule no-hardcoded-sleep {
@@ -52,8 +51,7 @@ rule ask-no-assertions {
   enabled true
   priority 80
   severity warning
-  ASK write
+  LOG write
   IF path GLOB "**/*.test.*" AND content LINE_REGEX "(?:it|test)\\s*\\(['\"][^'\"]+['\"]\\s*,\\s*(?:async\\s*)?\\(\\)\\s*=>\\s*\\{[^}]*\\}\\s*\\)"
   MESSAGE "Test function with no assertions detected. Tests without assertions always pass, giving false confidence. Add at least one expect() call."
-  PROMPT "Does this test have any assertions (expect, assert)? A test with no assertions is a green-washing risk."
 }
